@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Technology OS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Startup Screen */
+        #startup-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease;
+        }
+
+        .pixel-os {
+            font-size: 80px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            letter-spacing: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Setup Screens */
+        .setup-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 900;
+        }
+
+        .welcome-text {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .cursive {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 60px;
+            color: #ff6b6b;
+        }
+
+        .benzine-font {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 32px;
+            color: #4ecdc4;
+            margin-bottom: 30px;
+        }
+
+        .dem-book {
+            font-size: 28px;
+            color: #ffe66d;
+            margin-bottom: 40px;
+        }
+
+        .setup-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f0f0f0;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        button {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45b7af;
+        }
+
+        /* Lock Screen */
+        #lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 100px;
+            z-index: 800;
+        }
+
+        .time-display {
+            font-size: 80px;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .date-display {
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        .sign-in-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s;
+        }
+
+        .sign-in-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Desktop */
+        #desktop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            display: none;
+            flex-direction: column;
+            z-index: 700;
+        }
+
+        /* Menu Bar */
+        .menu-bar {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            display: flex;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+            height: 25px;
+        }
+
+        .apple-menu, .status-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item {
+            margin-right: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Control Center */
+        #control-center {
+            position: fixed;
+            top: 30px;
+            right: 15px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            backdrop-filter: blur(20px);
+            display: none;
+            flex-direction: column;
+            z-index: 750;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .control-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .control-label {
+            font-size: 14px;
+        }
+
+        .control-toggle {
+            width: 50px;
+            height: 25px;
+            background: #444;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .control-toggle.active {
+            background: #4ecdc4;
+        }
+
+        .control-toggle::after {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .control-toggle.active::after {
+            transform: translateX(25px);
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .control-grid-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .control-grid-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .control-grid-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .control-grid-label {
+            font-size: 12px;
+        }
+
+        .slider-container {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 5px;
+            background: #444;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .system-info {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        /* Dock */
+        .dock {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 20px;
+            display: flex;
+            backdrop-filter: blur(10px);
+        }
+
+        .dock-app {
+            width: 60px;
+            height: 60px;
+            margin: 0 5px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .dock-app:hover {
+            transform: scale(1.2);
+        }
+
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        /* Windows */
+        .window {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            color: #333;
+            min-width: 300px;
+            min-height: 200px;
+            resize: both;
+        }
+
+        .window-header {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: move;
+            user-select: none;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .close { background: #ff5f57; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28ca42; }
+
+        .window-title {
+            font-weight: 500;
+            font-size: 14px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .window-content {
+            padding: 15px;
+            flex: 1;
+            overflow: auto;
+            height: calc(100% - 40px);
+        }
+
+        .window.fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0;
+        }
+
+        .window.minimized {
+            display: none;
+        }
+
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .app:hover {
+            transform: scale(1.05);
+        }
+
+        .app-icon-large {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .app-icon-large img {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            object-fit: cover;
+        }
+
+        .app-name {
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Login Screen */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 850;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #4ecdc4;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: white;
+        }
+
+        .user-name {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .password-input {
+            width: 250px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Alpha Services */
+        .alpha-services {
+            position: absolute;
+            bottom: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Settings Styles */
+        .settings-container {
+            display: flex;
+            height: 100%;
+        }
+
+        .settings-sidebar {
+            width: 200px;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+        }
+
+        .settings-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .settings-option:hover, .settings-option.active {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wallpaper-option {
+            width: 100px;
+            height: 60px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            background-size: cover;
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+
+        .wallpaper-option.active {
+            border-color: #4ecdc4;
+        }
+
+        /* App Store Styles */
+        .app-store-container {
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .app-category {
+            margin-bottom: 30px;
+        }
+
+        .app-category h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .app-list {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .store-app {
+            width: 120px;
+            text-align: center;
+        }
+
+        .store-app-icon {
+            width: 80px;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            margin: 0 auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .store-app-name {
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .install-btn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        /* Iframe container */
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Terminal */
+        .terminal {
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin-bottom: 5px;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            width: 80%;
+            outline: none;
+        }
+
+        /* Calculator */
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .calculator-display {
+            grid-column: 1 / span 4;
+            background: #333;
+            color: white;
+            padding: 10px;
+            text-align: right;
+            font-size: 24px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            height: 50px;
+        }
+
+        .calculator-btn {
+            background: #ddd;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .calculator-btn:hover {
+            background: #ccc;
+        }
+
+        .calculator-btn.operator {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .calculator-btn.operator:hover {
+            background: #45b7af;
+        }
+
+        /* Battery indicator */
+        .battery {
+            display: flex;
+            align-items: center;
+        }
+
+        .battery-level {
+            width: 20px;
+            height: 10px;
+            background: #4ecdc4;
+            border-radius: 2px;
+            margin-right: 5px;
+            position: relative;
+        }
+
+        .battery-level::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 2px;
+            width: 3px;
+            height: 6px;
+            background: #4ecdc4;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Update notifications */
+        .update-notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: #4ecdc4;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .close-update {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+        }
+
+        /* Taskbar for minimized apps */
+        .taskbar {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .taskbar-app {
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Bluetooth container */
+        .bluetooth-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Notes styles */
+        .notes-container {
+            display: flex;
+            height: 100%;
+        }
+
+        .notes-sidebar {
+            width: 200px;
+            background: #f5f5f5;
+            padding: 15px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .notes-list {
+            margin-top: 15px;
+        }
+
+        .note-item {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .note-item.active {
+            background: #e0e0e0;
+        }
+
+        .notes-editor {
+            flex: 1;
+            padding: 15px;
+        }
+
+        .note-title {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border: none;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .note-content {
+            width: 100%;
+            height: calc(100% - 100px);
+            padding: 10px;
+            border: none;
+            resize: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Game styles */
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .game-item {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .game-item:hover {
+            transform: scale(1.05);
+        }
+
+        .game-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #4ecdc4;
+        }
+
+        .game-name {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .game-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* File upload */
+        .file-upload {
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        /* Theme styles */
+        .theme-option {
+            width: 100px;
+            height: 60px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+
+        .theme-option.active {
+            border-color: #4ecdc4;
+        }
+
+        .theme-light {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+        }
+
+        .theme-dark {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .theme-blue {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+
+        .theme-purple {
+            background: linear-gradient(135deg, #7e57c2 0%, #5e35b1 100%);
+        }
+
+        /* Network Info Styles */
+        .network-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .network-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .device-list {
+            margin-top: 15px;
+        }
+
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .device-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4ecdc4;
+        }
+
+        .device-status.connected {
+            background: #4ecdc4;
+        }
+
+        .device-status.disconnected {
+            background: #ff6b6b;
+        }
+
+        /* System Info Panel */
+        .system-panel {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .system-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Control Center Toggle States */
+        .wifi-on .control-grid-icon { color: #4ecdc4; }
+        .bluetooth-on .control-grid-icon { color: #4ecdc4; }
+        .airdrop-on .control-grid-icon { color: #4ecdc4; }
+        .dark-mode-on .control-grid-icon { color: #4ecdc4; }
+    </style>
+</head>
+<body>
+    <!-- Startup Screen -->
+    <div id="startup-screen">
+        <div class="pixel-os">OS</div>
+    </div>
+
+    <!-- Setup Screen 1 -->
+    <div id="setup-screen-1" class="setup-screen">
+        <div class="welcome-text cursive">hello</div>
+        <div class="benzine-font">Welcome to your</div>
+        <div class="dem-book">DemBook 26.03</div>
+        <button id="setup-continue-1">Continue</button>
+    </div>
+
+    <!-- Setup Screen 2 -->
+    <div id="setup-screen-2" class="setup-screen">
+        <div class="welcome-text">Welcome to Alpha Technology OS</div>
+        <div class="setup-form">
+            <div class="form-group">
+                <label for="country">Country or Region</label>
+                <select id="country">
+                    <option>United States</option>
+                    <option>United Kingdom</option>
+                    <option>Canada</option>
+                    <option>Australia</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="language">Language</label>
+                <select id="language">
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>French</option>
+                    <option>German</option>
+                </select>
+            </div>
+            <button id="setup-continue-2">Continue</button>
+        </div>
+    </div>
+
+    <!-- Setup Screen 3 -->
+    <div id="setup-screen-3" class="setup-screen">
+        <div class="welcome-text">Sign In with Your Alpha ID</div>
+        <div class="setup-form">
+            <div class="form-group">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" placeholder="Your Name">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Your email address">
+            </div>
+            <button id="setup-continue-3">Continue</button>
+        </div>
+    </div>
+
+    <!-- Lock Screen -->
+    <div id="lock-screen">
+        <div class="time-display" id="current-time">10:30</div>
+        <div class="date-display" id="current-date">Monday, June 26</div>
+        <button class="sign-in-btn" id="sign-in-btn">Sign In</button>
+        <div class="alpha-services">Powered by Alpha Services & Dem Services</div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div class="user-name" id="login-username">User</div>
+        <input type="password" class="password-input" id="login-password" placeholder="Enter Password">
+        <button id="login-btn">Sign In</button>
+        <div class="alpha-services">Powered by Alpha Services & Dem Services</div>
+    </div>
+
+    <!-- Desktop -->
+    <div id="desktop">
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <div class="apple-menu">
+                <div class="menu-item">Alpha OS</div>
+                <div class="menu-item">File</div>
+                <div class="menu-item">Edit</div>
+                <div class="menu-item">View</div>
+                <div class="menu-item">Window</div>
+                <div class="menu-item">Help</div>
+            </div>
+            <div class="status-menu">
+                <div class="menu-item" id="wifi-status"><i class="fas fa-wifi"></i> <span id="wifi-name">Wi-Fi</span></div>
+                <div class="menu-item battery" id="battery-status">
+                    <div class="battery-level"></div>
+                    <span id="battery-percent">80%</span>
+                </div>
+                <div class="menu-item" id="current-time-menu">10:30 AM</div>
+                <div class="menu-item" id="control-center-btn"><i class="fas fa-sliders-h"></i></div>
+            </div>
+        </div>
+
+        <!-- Control Center -->
+        <div id="control-center">
+            <div class="control-grid">
+                <div class="control-grid-item" id="wifi-control">
+                    <div class="control-grid-icon"><i class="fas fa-wifi"></i></div>
+                    <div class="control-grid-label">Wi-Fi</div>
+                </div>
+                <div class="control-grid-item" id="bluetooth-control">
+                    <div class="control-grid-icon"><i class="fas fa-bluetooth"></i></div>
+                    <div class="control-grid-label">Bluetooth</div>
+                </div>
+                <div class="control-grid-item" id="airdrop-control">
+                    <div class="control-grid-icon"><i class="fas fa-share-alt"></i></div>
+                    <div class="control-grid-label">Airdrop</div>
+                </div>
+                <div class="control-grid-item" id="dark-mode-control">
+                    <div class="control-grid-icon"><i class="fas fa-moon"></i></div>
+                    <div class="control-grid-label">Dark Mode</div>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="control-label">Display Brightness</div>
+                <input type="range" min="0" max="100" value="80" class="slider" id="brightness-slider">
+            </div>
+            
+            <div class="slider-container">
+                <div class="control-label">Volume</div>
+                <input type="range" min="0" max="100" value="60" class="slider" id="volume-slider">
+            </div>
+            
+            <div class="system-info">
+                <div class="info-item">
+                    <span>Battery</span>
+                    <span id="cc-battery">80%</span>
+                </div>
+                <div class="info-item">
+                    <span>Storage</span>
+                    <span id="cc-storage">245 GB of 256 GB</span>
+                </div>
+                <div class="info-item">
+                    <span>Memory</span>
+                    <span id="cc-memory">8.2 GB of 16 GB</span>
+                </div>
+                <div class="info-item">
+                    <span>CPU</span>
+                    <span id="cc-cpu">Intel Core i7 2.6 GHz</span>
+                </div>
+                <div class="info-item">
+                    <span>User</span>
+                    <span id="cc-user">User</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Grid -->
+        <div class="app-grid">
+            <div class="app" data-app="finder">
+                <div class="app-icon-large"><i class="fas fa-folder" style="color: #4ecdc4; font-size: 32px;"></i></div>
+                <div class="app-name">Finder</div>
+            </div>
+            <div class="app" data-app="browser">
+                <div class="app-icon-large"><i class="fas fa-globe" style="color: #4285f4; font-size: 32px;"></i></div>
+                <div class="app-name">Browser</div>
+            </div>
+            <div class="app" data-app="messages">
+                <div class="app-icon-large"><i class="fas fa-comment" style="color: #34a853; font-size: 32px;"></i></div>
+                <div class="app-name">Messages</div>
+            </div>
+            <div class="app" data-app="mail">
+                <div class="app-icon-large"><i class="fas fa-envelope" style="color: #ea4335; font-size: 32px;"></i></div>
+                <div class="app-name">Mail</div>
+            </div>
+            <div class="app" data-app="photos">
+                <div class="app-icon-large"><i class="fas fa-images" style="color: #fbbc05; font-size: 32px;"></i></div>
+                <div class="app-name">Photos</div>
+            </div>
+            <div class="app" data-app="music">
+                <div class="app-icon-large"><i class="fas fa-music" style="color: #9c27b0; font-size: 32px;"></i></div>
+                <div class="app-name">Music</div>
+            </div>
+            <div class="app" data-app="calendar">
+                <div class="app-icon-large"><i class="fas fa-calendar" style="color: #ff6b6b; font-size: 32px;"></i></div>
+                <div class="app-name">Calendar</div>
+            </div>
+            <div class="app" data-app="notes">
+                <div class="app-icon-large"><i class="fas fa-sticky-note" style="color: #ffe66d; font-size: 32px;"></i></div>
+                <div class="app-name">Notes</div>
+            </div>
+            <div class="app" data-app="settings">
+                <div class="app-icon-large"><i class="fas fa-cog" style="color: #78909c; font-size: 32px;"></i></div>
+                <div class="app-name">Settings</div>
+            </div>
+            <div class="app" data-app="calculator">
+                <div class="app-icon-large"><i class="fas fa-calculator" style="color: #26c6da; font-size: 32px;"></i></div>
+                <div class="app-name">Calculator</div>
+            </div>
+            <div class="app" data-app="terminal">
+                <div class="app-icon-large"><i class="fas fa-terminal" style="color: #00c853; font-size: 32px;"></i></div>
+                <div class="app-name">Terminal</div>
+            </div>
+            <div class="app" data-app="app-store">
+                <div class="app-icon-large"><i class="fas fa-shopping-bag" style="color: #7e57c2; font-size: 32px;"></i></div>
+                <div class="app-name">App Store</div>
+            </div>
+            <div class="app" data-app="versions">
+                <div class="app-icon-large"><i class="fas fa-code-branch" style="color: #ff9800; font-size: 32px;"></i></div>
+                <div class="app-name">Versions</div>
+            </div>
+            <div class="app" data-app="system-info">
+                <div class="app-icon-large"><i class="fas fa-info-circle" style="color: #4ecdc4; font-size: 32px;"></i></div>
+                <div class="app-name">System Info</div>
+            </div>
+        </div>
+
+        <!-- Dock -->
+        <div class="dock">
+            <div class="dock-app" data-app="finder">
+                <div class="app-icon"><i class="fas fa-folder" style="color: #4ecdc4; font-size: 20px;"></i></div>
+            </div>
+            <div class="dock-app" data-app="browser">
+                <div class="app-icon"><i class="fas fa-globe" style="color: #4285f4; font-size: 20px;"></i></div>
+            </div>
+            <div class="dock-app" data-app="messages">
+                <div class="app-icon"><i class="fas fa-comment" style="color: #34a853; font-size: 20px;"></i></div>
+            </div>
+            <div class="dock-app" data-app="mail">
+                <div class="app-icon"><i class="fas fa-envelope" style="color: #ea4335; font-size: 20px;"></i></div>
+            </div>
+            <div class="dock-app" data-app="photos">
+                <div class="app-icon"><i class="fas fa-images" style="color: #fbbc05; font-size: 20px;"></i></div>
+            </div>
+            <div class="dock-app" data-app="music">
+                <div class="app-icon"><i class="fas fa-music" style="color: #9c27b0; font-size: 20px;"></i></div>
+            </div>
+            <div class="dock-app" data-app="settings">
+                <div class="app-icon"><i class="fas fa-cog" style="color: #78909c; font-size: 20px;"></i></div>
+            </div>
+        </div>
+
+        <!-- Taskbar for minimized apps -->
+        <div class="taskbar" id="taskbar"></div>
+
+        <!-- System Info Window -->
+        <div class="window" id="system-info-window" style="width: 800px; height: 600px; top: 100px; left: 200px;">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="control close" data-window="system-info"></div>
+                    <div class="control minimize" data-window="system-info"></div>
+                    <div class="control maximize" data-window="system-info"></div>
+                </div>
+                <div class="window-title">System Information</div>
+                <div></div>
+            </div>
+            <div class="window-content">
+                <div class="system-panel">
+                    <h3>Device Information</h3>
+                    <div class="system-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="device-ram">8 GB</div>
+                            <div class="stat-label">RAM</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="device-storage">256 GB</div>
+                            <div class="stat-label">Storage</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="device-cpu">2.6 GHz</div>
+                            <div class="stat-label">CPU</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="device-os">Alpha OS</div>
+                            <div class="stat-label">Operating System</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="network-info">
+                    <h3>Network Information</h3>
+                    <div class="network-item">
+                        <span>Connection Type:</span>
+                        <span id="connection-type">4G Connection</span>
+                    </div>
+                    <div class="network-item">
+                        <span>Network Name:</span>
+                        <span id="network-name">Home Network</span>
+                    </div>
+                    <div class="network-item">
+                        <span>Signal Strength:</span>
+                        <span id="signal-strength">Excellent</span>
+                    </div>
+                    <div class="network-item">
+                        <span>IP Address:</span>
+                        <span id="ip-address">192.168.1.100</span>
+                    </div>
+                    
+                    <div class="device-list">
+                        <h4>Connected Devices</h4>
+                        <div class="device-item">
+                            <div>
+                                <strong>Wireless Headphones</strong>
+                                <div>Bluetooth Audio</div>
+                            </div>
+                            <div class="device-status connected"></div>
+                        </div>
+                        <div class="device-item">
+                            <div>
+                                <strong>Wireless Mouse</strong>
+                                <div>Bluetooth Peripheral</div>
+                            </div>
+                            <div class="device-status connected"></div>
+                        </div>
+                        <div class="device-item">
+                            <div>
+                                <strong>Smart Speaker</strong>
+                                <div>Wi-Fi Speaker</div>
+                            </div>
+                            <div class="device-status connected"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="system-panel">
+                    <h3>Real-Time System Data</h3>
+                    <div class="system-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="real-time-cpu">12%</div>
+                            <div class="stat-label">CPU Usage</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="real-time-ram">4.2 GB</div>
+                            <div class="stat-label">Memory Used</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="real-time-storage">45%</div>
+                            <div class="stat-label">Storage Used</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="real-time-battery">78%</div>
+                            <div class="stat-label">Battery</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finder Window -->
+        <div class="window" id="finder-window" style="width: 800px; height: 500px; top: 100px; left: 200px;">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="control close" data-window="finder"></div>
+                    <div class="control minimize" data-window="finder"></div>
+                    <div class="control maximize" data-window="finder"></div>
+                </div>
+                <div class="window-title">Finder</div>
+                <div></div>
+            </div>
+            <div class="window-content">
+                <h3>Welcome to Alpha OS Finder</h3>
+                <p>This is a file browser similar to macOS Finder.</p>
+                <p>You can navigate your files and folders from here.</p>
+                <div style="margin-top: 20px;">
+                    <h4>Recent Files</h4>
+                    <ul>
+                        <li>Document.pdf</li>
+                        <li>Presentation.pptx</li>
+                        <li>Spreadsheet.xlsx</li>
+                        <li>Photo.jpg</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browser Window -->
+        <div class="window" id="browser-window" style="width: 900px; height: 600px; top: 80px; left: 300px;">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="control close" data-window="browser"></div>
+                    <div class="control minimize" data-window="browser"></div>
+                    <div class="control maximize" data-window="browser"></div>
+                </div>
+                <div class="window-title">Alpha Browser</div>
+                <div></div>
+            </div>
+            <div class="window-content">
+                <iframe src="https://duckduckgo.com" class="iframe-container" id="browser-iframe"></iframe>
+            </div>
+        </div>
+
+        <!-- Settings Window -->
+        <div class="window" id="settings-window" style="width: 700px; height: 550px; top: 120px; left: 400px;">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="control close" data-window="settings"></div>
+                    <div class="control minimize" data-window="settings"></div>
+                    <div class="control maximize" data-window="settings"></div>
+                </div>
+                <div class="window-title">Settings</div>
+                <div></div>
+            </div>
+            <div class="window-content">
+                <div class="settings-container">
+                    <div class="settings-sidebar">
+                        <div class="settings-option active" data-section="general">General</div>
+                        <div class="settings-option" data-section="accounts">Accounts</div>
+                        <div class="settings-option" data-section="wallpaper">Wallpaper</div>
+                        <div class="settings-option" data-section="themes">Themes</div>
+                        <div class="settings-option" data-section="bluetooth">Bluetooth</div>
+                        <div class="settings-option" data-section="updates">Updates</div>
+                        <div class="settings-option" data-section="about">About</div>
+                    </div>
+                    <div class="settings-content">
+                        <div class="settings-section" id="general-section">
+                            <h3>General Settings</h3>
+                            <p>Change your system preferences here.</p>
+                            <div class="form-group">
+                                <label for="theme-select">Theme</label>
+                                <select id="theme-select">
+                                    <option>Light</option>
+                                    <option>Dark</option>
+                                    <option>Auto</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="settings-section" id="accounts-section" style="display: none;">
+                            <h3>User Accounts</h3>
+                            <div id="accounts-list">
+                                <!-- Accounts will be populated here -->
+                            </div>
+                            <button id="add-account-btn">Add New Account</button>
+                            <button id="delete-account-btn" style="background: #ff6b6b; margin-top: 10px;">Delete Current Account</button>
+                        </div>
+                        <div class="settings-section" id="wallpaper-section" style="display: none;">
+                            <h3>Wallpaper</h3>
+                            <p>Select your desktop background:</p>
+                            <div>
+                                <div class="wallpaper-option active" data-wallpaper="https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" style="background-image: url('https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')"></div>
+                                <div class="wallpaper-option" data-wallpaper="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')"></div>
+                                <div class="wallpaper-option" data-wallpaper="https://images.unsplash.com/photo-1499002238440-d264edd596ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" style="background-image: url('https://images.unsplash.com/photo-1499002238440-d264edd596ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')"></div>
+                                <div class="wallpaper-option" data-wallpaper="https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" style="background-image: url('https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')"></div>
+                            </div>
+                            <div class="file-upload">
+                                <p>Or upload your own wallpaper:</p>
+                                <input type="file" id="wallpaper-upload" accept="image/*" style="display: none;">
+                                <label for="wallpaper-upload" class="upload-btn">Choose File</label>
+                            </div>
+                        </div>
+                        <div class="settings-section" id="themes-section" style="display: none;">
+                            <h3>Themes</h3>
+                            <p>Select a system theme:</p>
+                            <div>
+                                <div class="theme-option theme-light active" data-theme="light"></div>
+                                <div class="theme-option theme-dark" data-theme="dark"></div>
+                                <div class="theme-option theme-blue" data-theme="blue"></div>
+                                <div class="theme-option theme-purple" data-theme="purple"></div>
+                            </div>
+                        </div>
+                        <div class="settings-section" id="bluetooth-section" style="display: none;">
+                            <h3>Bluetooth</h3>
+                            <iframe src="https://slenathomsonur.github.io/Bluetooth/" class="bluetooth-container"></iframe>
+                        </div>
+                        <div class="settings-section" id="updates-section" style="display: none;">
+                            <h3>Software Updates</h3>
+                            <p>Your system is up to date.</p>
+                            <div id="update-history">
+                                <h4>Update History</h4>
+                                <ul>
+                                    <li>Alpha OS 26.03 - June 2023</li>
+                                    <li>Alpha OS 25.12 - December 2022</li>
+                                    <li>Alpha OS 25.06 - June 2022</li>
+                                </ul>
+                            </div>
+                            <button id="check-updates">Check for Updates</button>
+                        </div>
+                        <div class="settings-section" id="about-section" style="display: none;">
+                            <h3>About This Device</h3>
+                            <p><strong>Alpha Technology OS</strong></p>
+                            <p>Version: 26.03 (DemBook Edition)</p>
+                            <p>Powered by Alpha Services & Dem Services</p>
+                            <p>© 2023 Alpha Technology. All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- More windows would be here (calculator, terminal, etc.) -->
+
+    </div>
+
+    <!-- Update Notification -->
+    <div class="update-notification" id="update-notification">
+        <button class="close-update" id="close-update">&times;</button>
+        <p>New updates are available for your system!</p>
+        <button id="view-updates">View Updates</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const startupScreen = document.getElementById('startup-screen');
+        const setupScreen1 = document.getElementById('setup-screen-1');
+        const setupScreen2 = document.getElementById('setup-screen-2');
+        const setupScreen3 = document.getElementById('setup-screen-3');
+        const lockScreen = document.getElementById('lock-screen');
+        const loginScreen = document.getElementById('login-screen');
+        const desktop = document.getElementById('desktop');
+        const signInBtn = document.getElementById('sign-in-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const setupContinue1 = document.getElementById('setup-continue-1');
+        const setupContinue2 = document.getElementById('setup-continue-2');
+        const setupContinue3 = document.getElementById('setup-continue-3');
+        const currentTime = document.getElementById('current-time');
+        const currentDate = document.getElementById('current-date');
+        const currentTimeMenu = document.getElementById('current-time-menu');
+        const userAvatar = document.getElementById('user-avatar');
+        const loginUsername = document.getElementById('login-username');
+        const loginPassword = document.getElementById('login-password');
+        const fullnameInput = document.getElementById('fullname');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const emailInput = document.getElementById('email');
+        const taskbar = document.getElementById('taskbar');
+        const updateNotification = document.getElementById('update-notification');
+        const closeUpdateBtn = document.getElementById('close-update');
+        const controlCenter = document.getElementById('control-center');
+        const controlCenterBtn = document.getElementById('control-center-btn');
+        const batteryPercent = document.getElementById('battery-percent');
+        const ccBattery = document.getElementById('cc-battery');
+        const ccStorage = document.getElementById('cc-storage');
+        const ccMemory = document.getElementById('cc-memory');
+        const ccCpu = document.getElementById('cc-cpu');
+        const ccUser = document.getElementById('cc-user');
+        const wifiName = document.getElementById('wifi-name');
+
+        // Control Center Elements
+        const wifiControl = document.getElementById('wifi-control');
+        const bluetoothControl = document.getElementById('bluetooth-control');
+        const airdropControl = document.getElementById('airdrop-control');
+        const darkModeControl = document.getElementById('dark-mode-control');
+        const brightnessSlider = document.getElementById('brightness-slider');
+        const volumeSlider = document.getElementById('volume-slider');
+
+        // App elements
+        const apps = document.querySelectorAll('.app, .dock-app');
+        const windows = document.querySelectorAll('.window');
+        const windowControls = document.querySelectorAll('.control');
+        const settingsOptions = document.querySelectorAll('.settings-option');
+
+        // System state
+        let currentUser = null;
+        let isWifiOn = true;
+        let isBluetoothOn = true;
+        let isAirdropOn = true;
+        let isDarkModeOn = false;
+
+        // Initialize
+        function init() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(updateSystemInfo, 2000);
+            updateSystemInfo();
+            detectRealDeviceInfo();
+            
+            // Check if user has already completed setup
+            const userData = localStorage.getItem('alphaOSUser');
+            if (userData) {
+                // User exists, skip to lock screen
+                setTimeout(() => {
+                    startupScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        startupScreen.style.display = 'none';
+                        lockScreen.style.display = 'flex';
+                        
+                        const user = JSON.parse(userData);
+                        currentUser = user;
+                        userAvatar.textContent = user.fullname.charAt(0);
+                        loginUsername.textContent = user.fullname;
+                        ccUser.textContent = user.fullname;
+                    }, 1000);
+                }, 3000);
+            } else {
+                // New user, show setup screens
+                setTimeout(() => {
+                    startupScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        startupScreen.style.display = 'none';
+                        setupScreen1.style.display = 'flex';
+                    }, 1000);
+                }, 3000);
+            }
+
+            // Show update notification after a delay
+            setTimeout(() => {
+                updateNotification.style.display = 'block';
+            }, 10000);
+        }
+
+        // Update time function
+        function updateTime() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+            
+            currentTime.textContent = now.toLocaleTimeString([], timeOptions);
+            currentDate.textContent = now.toLocaleDateString([], dateOptions);
+            currentTimeMenu.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Detect real device information
+        function detectRealDeviceInfo() {
+            // Browser and OS detection
+            const userAgent = navigator.userAgent;
+            let os = 'Unknown OS';
+            let browser = 'Unknown Browser';
+            
+            // Detect OS
+            if (userAgent.includes('Windows')) os = 'Windows';
+            else if (userAgent.includes('Mac')) os = 'macOS';
+            else if (userAgent.includes('Linux')) os = 'Linux';
+            else if (userAgent.includes('Android')) os = 'Android';
+            else if (userAgent.includes('iOS')) os = 'iOS';
+            
+            // Detect Browser
+            if (userAgent.includes('Chrome')) browser = 'Chrome';
+            else if (userAgent.includes('Firefox')) browser = 'Firefox';
+            else if (userAgent.includes('Safari')) browser = 'Safari';
+            else if (userAgent.includes('Edge')) browser = 'Edge';
+            
+            // Update UI with real device info
+            document.getElementById('device-os').textContent = `${os} (${browser})`;
+            document.getElementById('device-cpu').textContent = `${navigator.hardwareConcurrency || '8'} cores`;
+            document.getElementById('device-ram').textContent = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : '8 GB';
+            
+            // Network information
+            updateNetworkInfo();
+        }
+
+        // Update network information
+        function updateNetworkInfo() {
+            // Connection type detection
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            
+            if (connection) {
+                const effectiveType = connection.effectiveType;
+                const downlink = connection.downlink;
+                
+                document.getElementById('connection-type').textContent = effectiveType ? `${effectiveType.toUpperCase()} Connection` : 'Wi-Fi';
+                document.getElementById('signal-strength').textContent = getSignalStrength(downlink);
+                
+                // Generate realistic IP based on connection type
+                const ip = generateRealisticIP();
+                document.getElementById('ip-address').textContent = ip;
+                
+                // Update WiFi name in menu bar
+                wifiName.textContent = getNetworkName(effectiveType);
+            } else {
+                // Fallback values
+                document.getElementById('connection-type').textContent = '4G Connection';
+                document.getElementById('signal-strength').textContent = 'Excellent';
+                document.getElementById('ip-address').textContent = '192.168.1.100';
+                wifiName.textContent = 'Home Network';
+            }
+        }
+
+        // Generate realistic IP address
+        function generateRealisticIP() {
+            const types = [
+                '192.168.1.' + Math.floor(Math.random() * 255),
+                '10.0.0.' + Math.floor(Math.random() * 255),
+                '172.16.' + Math.floor(Math.random() * 16) + '.' + Math.floor(Math.random() * 255)
+            ];
+            return types[Math.floor(Math.random() * types.length)];
+        }
+
+        // Get network name based on connection type
+        function getNetworkName(connectionType) {
+            const networks = {
+                '4g': '4G Network',
+                '3g': '3G Network', 
+                '2g': '2G Network',
+                'slow-2g': '2G Network',
+                'wifi': 'Home Network',
+                'ethernet': 'Ethernet'
+            };
+            return networks[connectionType] || 'Wi-Fi Network';
+        }
+
+        // Get signal strength from downlink
+        function getSignalStrength(downlink) {
+            if (!downlink) return 'Excellent';
+            
+            if (downlink > 5) return 'Excellent';
+            else if (downlink > 2) return 'Good';
+            else if (downlink > 1) return 'Fair';
+            else return 'Poor';
+        }
+
+        // Update system info
+        function updateSystemInfo() {
+            // Simulate battery drain over time
+            let batteryLevel = parseInt(localStorage.getItem('batteryLevel') || '80');
+            batteryLevel = Math.max(10, batteryLevel - Math.floor(Math.random() * 3));
+            localStorage.setItem('batteryLevel', batteryLevel.toString());
+            
+            batteryPercent.textContent = `${batteryLevel}%`;
+            ccBattery.textContent = `${batteryLevel}%`;
+            document.getElementById('real-time-battery').textContent = `${batteryLevel}%`;
+            
+            // Update battery level indicator
+            const batteryLevelEl = document.querySelector('.battery-level');
+            batteryLevelEl.style.width = `${batteryLevel * 0.2}px`;
+            
+            // Simulate CPU usage
+            const cpuUsage = Math.floor(Math.random() * 30) + 5;
+            document.getElementById('real-time-cpu').textContent = `${cpuUsage}%`;
+            
+            // Simulate RAM usage
+            const deviceMemory = navigator.deviceMemory || 8;
+            const ramUsed = (deviceMemory * 0.6 + Math.random() * 0.3).toFixed(1);
+            document.getElementById('real-time-ram').textContent = `${ramUsed} GB`;
+            
+            // Simulate storage usage
+            const storageUsed = Math.floor(Math.random() * 20) + 40;
+            document.getElementById('real-time-storage').textContent = `${storageUsed}%`;
+            
+            // Update other system info
+            if (currentUser) {
+                ccUser.textContent = currentUser.fullname;
+            }
+        }
+
+        // App click handlers - OPEN APPS
+        apps.forEach(app => {
+            app.addEventListener('click', () => {
+                const appName = app.getAttribute('data-app');
+                const window = document.getElementById(`${appName}-window`);
+                if (window) {
+                    window.style.display = 'flex';
+                    // Bring window to front
+                    windows.forEach(w => w.style.zIndex = '1');
+                    window.style.zIndex = '2';
+                }
+            });
+        });
+
+        // Window control handlers - CLOSE TABS
+        windowControls.forEach(control => {
+            control.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const windowName = control.getAttribute('data-window');
+                const window = document.getElementById(`${windowName}-window`);
+                
+                if (control.classList.contains('close')) {
+                    window.style.display = 'none';
+                    // Remove from taskbar
+                    const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowName}"]`);
+                    if (taskbarApp) {
+                        taskbarApp.remove();
+                    }
+                } else if (control.classList.contains('minimize')) {
+                    window.classList.add('minimized');
+                    // Add to taskbar
+                    const existingTaskbarApp = document.querySelector(`.taskbar-app[data-window="${windowName}"]`);
+                    if (!existingTaskbarApp) {
+                        const taskbarApp = document.createElement('div');
+                        taskbarApp.className = 'taskbar-app';
+                        taskbarApp.setAttribute('data-window', windowName);
+                        taskbarApp.innerHTML = `<i class="fas fa-window-restore"></i>`;
+                        taskbarApp.addEventListener('click', () => {
+                            window.classList.remove('minimized');
+                            taskbarApp.remove();
+                        });
+                        taskbar.appendChild(taskbarApp);
+                    }
+                } else if (control.classList.contains('maximize')) {
+                    if (window.classList.contains('fullscreen')) {
+                        window.classList.remove('fullscreen');
+                    } else {
+                        window.classList.add('fullscreen');
+                    }
+                }
+            });
+        });
+
+        // Control Center functionality - ALL BUTTONS WORK
+        controlCenterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            controlCenter.style.display = controlCenter.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!controlCenter.contains(e.target) && e.target !== controlCenterBtn) {
+                controlCenter.style.display = 'none';
+            }
+        });
+
+        // WiFi toggle
+        wifiControl.addEventListener('click', () => {
+            isWifiOn = !isWifiOn;
+            wifiControl.classList.toggle('wifi-on', isWifiOn);
+            wifiName.textContent = isWifiOn ? 'Home Network' : 'Wi-Fi Off';
+            alert(`Wi-Fi ${isWifiOn ? 'enabled' : 'disabled'}`);
+        });
+
+        // Bluetooth toggle
+        bluetoothControl.addEventListener('click', () => {
+            isBluetoothOn = !isBluetoothOn;
+            bluetoothControl.classList.toggle('bluetooth-on', isBluetoothOn);
+            alert(`Bluetooth ${isBluetoothOn ? 'enabled' : 'disabled'}`);
+        });
+
+        // Airdrop toggle
+        airdropControl.addEventListener('click', () => {
+            isAirdropOn = !isAirdropOn;
+            airdropControl.classList.toggle('airdrop-on', isAirdropOn);
+            alert(`Airdrop ${isAirdropOn ? 'enabled' : 'disabled'}`);
+        });
+
+        // Dark Mode toggle
+        darkModeControl.addEventListener('click', () => {
+            isDarkModeOn = !isDarkModeOn;
+            darkModeControl.classList.toggle('dark-mode-on', isDarkModeOn);
+            document.body.style.filter = isDarkModeOn ? 'invert(1) hue-rotate(180deg)' : 'none';
+            alert(`Dark Mode ${isDarkModeOn ? 'enabled' : 'disabled'}`);
+        });
+
+        // Brightness slider
+        brightnessSlider.addEventListener('input', (e) => {
+            const brightness = e.target.value;
+            document.body.style.filter = `brightness(${brightness / 100})`;
+        });
+
+        // Volume slider
+        volumeSlider.addEventListener('input', (e) => {
+            const volume = e.target.value;
+            // In a real implementation, this would control system volume
+            console.log(`Volume set to: ${volume}%`);
+        });
+
+        // Settings navigation
+        settingsOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const section = option.getAttribute('data-section');
+                
+                // Update active option
+                settingsOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                // Show corresponding section
+                document.querySelectorAll('.settings-section').forEach(sec => {
+                    sec.style.display = 'none';
+                });
+                document.getElementById(`${section}-section`).style.display = 'block';
+            });
+        });
+
+        // Close update notification
+        closeUpdateBtn.addEventListener('click', () => {
+            updateNotification.style.display = 'none';
+        });
+
+        // Setup screen navigation
+        setupContinue1.addEventListener('click', () => {
+            setupScreen1.style.display = 'none';
+            setupScreen2.style.display = 'flex';
+        });
+
+        setupContinue2.addEventListener('click', () => {
+            setupScreen2.style.display = 'none';
+            setupScreen3.style.display = 'flex';
+        });
+
+        setupContinue3.addEventListener('click', () => {
+            const fullname = fullnameInput.value || 'User';
+            const username = usernameInput.value || 'user';
+            const password = passwordInput.value || 'password';
+            const email = emailInput.value || 'user@example.com';
+            
+            // Save user data
+            const userData = {
+                fullname,
+                username,
+                password,
+                email
+            };
+            localStorage.setItem('alphaOSUser', JSON.stringify(userData));
+            currentUser = userData;
+            
+            setupScreen3.style.display = 'none';
+            lockScreen.style.display = 'flex';
+            
+            // Update login screen with user data
+            userAvatar.textContent = fullname.charAt(0);
+            loginUsername.textContent = fullname;
+            ccUser.textContent = fullname;
+        });
+
+        // Lock screen to login screen
+        signInBtn.addEventListener('click', () => {
+            lockScreen.style.display = 'none';
+            loginScreen.style.display = 'flex';
+        });
+
+        // Login to desktop
+        loginBtn.addEventListener('click', () => {
+            const userData = JSON.parse(localStorage.getItem('alphaOSUser'));
+            if (loginPassword.value === userData.password) {
+                loginScreen.style.display = 'none';
+                desktop.style.display = 'flex';
+                currentUser = userData;
+            } else {
+                alert('Incorrect password. Please try again.');
+            }
+        });
+
+        // Initialize the OS
+        window.onload = init;
+    </script>
+</body>
+</html>
